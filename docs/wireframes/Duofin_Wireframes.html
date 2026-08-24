@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Duofin — Wireframes</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #EDEDED;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  header {
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    padding: 16px 24px;
+  }
+  header h1 { font-size: 18px; margin: 0 0 4px; }
+  header p { font-size: 12px; color: #777; margin: 0; }
+
+  nav {
+    display: flex;
+    gap: 4px;
+    padding: 12px 24px;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    flex-wrap: wrap;
+  }
+  nav button {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 8px 14px;
+    background: #f5f5f5;
+    border: 1px solid #bbb;
+    cursor: pointer;
+    color: #444;
+  }
+  nav button.active {
+    background: #333;
+    color: #fff;
+    border-color: #333;
+  }
+
+  main {
+    padding: 32px 24px;
+    display: flex;
+    justify-content: center;
+  }
+  .screen {
+    display: none;
+    width: 375px;
+    background: #fff;
+    border: 2px solid #999;
+    min-height: 640px;
+  }
+  .screen.active { display: block; }
+  .screen-label {
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Wireframe primitives */
+  .wf-box {
+    border: 1px dashed #999;
+    background: repeating-linear-gradient(45deg, #fafafa, #fafafa 6px, #f0f0f0 6px, #f0f0f0 12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 11px;
+  }
+  .wf-line { background: #d5d5d5; border-radius: 2px; }
+  .wf-circle { border-radius: 50%; background: #d5d5d5; display: flex; align-items: center; justify-content: center; color: #888; font-size: 10px; }
+  .wf-btn {
+    border: 1px solid #666;
+    background: #e8e8e8;
+    color: #444;
+    text-align: center;
+    font-size: 12px;
+    padding: 10px;
+    border-radius: 3px;
+  }
+  .wf-btn.primary { background: #ccc; border-color: #333; font-weight: bold; }
+  .wf-input {
+    border: 1px solid #999;
+    background: #fcfcfc;
+    padding: 10px;
+    font-size: 11px;
+    color: #999;
+    border-radius: 3px;
+  }
+  .wf-pill {
+    border: 1px solid #999;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: #777;
+    background: #f2f2f2;
+  }
+  .row { display: flex; }
+  .col { display: flex; flex-direction: column; }
+  .gap-xs { gap: 6px; }
+  .gap-sm { gap: 10px; }
+  .gap-md { gap: 16px; }
+  .p { padding: 16px; }
+  .divider { border-bottom: 1px solid #e0e0e0; }
+
+  .annotation {
+    font-size: 11px;
+    color: #999;
+    margin-top: 20px;
+    max-width: 375px;
+    line-height: 1.5;
+  }
+  .wrap { display: flex; flex-direction: column; align-items: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Duofin — Wireframes (baja fidelidad)</h1>
+  <p>Referencia estructural de pantallas · v1.0 MVP · Usar junto con Duofin_Sistema_Diseno.md para colores y tipografías finales</p>
+</header>
+
+<nav id="nav"></nav>
+
+<main>
+  <div class="wrap">
+
+    <!-- LOGIN -->
+    <div class="screen" data-screen="login">
+      <div class="p col gap-md" style="height:100%; justify-content:center; align-items:center; min-height:600px;">
+        <div class="wf-circle" style="width:56px;height:56px;">LOGO</div>
+        <div class="wf-line" style="width:180px;height:16px;"></div>
+        <div class="col gap-sm" style="width:280px;">
+          <div class="wf-input">Email</div>
+          <div class="wf-input">Contraseña</div>
+          <div class="wf-btn primary">Iniciar sesión</div>
+          <div class="wf-line" style="width:200px;height:10px;align-self:center;margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div class="screen" data-screen="register">
+      <div class="p col gap-md" style="height:100%; justify-content:center; align-items:center; min-height:600px;">
+        <div class="wf-circle" style="width:56px;height:56px;">LOGO</div>
+        <div class="wf-line" style="width:200px;height:16px;"></div>
+        <div class="col gap-sm" style="width:280px;">
+          <div class="wf-input">Nombre</div>
+          <div class="wf-input">Email</div>
+          <div class="wf-input">Contraseña</div>
+          <div class="wf-btn primary">Crear cuenta</div>
+          <div class="wf-line" style="width:200px;height:10px;align-self:center;margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACEPTAR INVITACION -->
+    <div class="screen" data-screen="accept-invite">
+      <div class="p col gap-md" style="height:100%; justify-content:center; align-items:center; min-height:600px; text-align:center;">
+        <div class="wf-circle" style="width:56px;height:56px;">💌</div>
+        <div class="wf-line" style="width:220px;height:16px;"></div>
+        <div class="wf-line" style="width:180px;height:10px;"></div>
+        <div class="row gap-sm" style="margin-top:8px;">
+          <div class="wf-circle" style="width:40px;height:40px;">A</div>
+          <div class="wf-circle" style="width:40px;height:40px;">B</div>
+        </div>
+        <div class="col gap-sm" style="width:260px; margin-top:16px;">
+          <div class="wf-btn primary">Aceptar invitación</div>
+          <div class="wf-btn">Rechazar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="screen" data-screen="dashboard">
+      <div class="col">
+        <div class="row p gap-sm divider" style="justify-content:space-between; align-items:center;">
+          <div class="wf-line" style="width:60px;height:14px;"></div>
+          <div class="row gap-xs">
+            <div class="wf-pill">Mía</div>
+            <div class="wf-pill">Pareja</div>
+            <div class="wf-pill">Combinada</div>
+          </div>
+          <div class="wf-circle" style="width:20px;height:20px;">🔔</div>
+        </div>
+
+        <div class="p divider">
+          <div class="wf-box" style="height:120px; width:100%;">Gráfico "traslape" — balance individual + combinado</div>
+        </div>
+
+        <div class="p col gap-sm">
+          <div class="row" style="justify-content:space-between;">
+            <div class="wf-line" style="width:140px;height:14px;"></div>
+            <div class="wf-btn" style="padding:6px 12px;font-size:11px;">+ Nueva</div>
+          </div>
+          <div class="row gap-sm divider" style="padding:8px 0; align-items:center;">
+            <div class="wf-circle" style="width:28px;height:28px;">A</div>
+            <div class="col gap-xs" style="flex:1;">
+              <div class="wf-line" style="width:90px;height:10px;"></div>
+              <div class="wf-line" style="width:60px;height:8px;"></div>
+            </div>
+            <div class="wf-line" style="width:70px;height:12px;"></div>
+          </div>
+          <div class="row gap-sm divider" style="padding:8px 0; align-items:center;">
+            <div class="wf-circle" style="width:28px;height:28px;">B</div>
+            <div class="col gap-xs" style="flex:1;">
+              <div class="wf-line" style="width:100px;height:10px;"></div>
+              <div class="wf-line" style="width:60px;height:8px;"></div>
+            </div>
+            <div class="wf-line" style="width:70px;height:12px;"></div>
+          </div>
+          <div class="row gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-circle" style="width:28px;height:28px;">A</div>
+            <div class="col gap-xs" style="flex:1;">
+              <div class="wf-line" style="width:80px;height:10px;"></div>
+              <div class="wf-line" style="width:60px;height:8px;"></div>
+            </div>
+            <div class="wf-line" style="width:70px;height:12px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUEVA TRANSACCION -->
+    <div class="screen" data-screen="transaction">
+      <div class="p col gap-md" style="height:100%; justify-content:center;">
+        <div class="wf-box p col gap-md" style="width:100%; min-height:420px; align-items:stretch; justify-content:flex-start; background:#fff; border-style:solid;">
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div class="wf-line" style="width:140px;height:14px;"></div>
+            <div class="wf-circle" style="width:20px;height:20px;">×</div>
+          </div>
+          <div class="row gap-sm">
+            <div class="wf-pill">○ Ingreso</div>
+            <div class="wf-pill" style="background:#ddd;">● Gasto</div>
+          </div>
+          <div class="wf-input">Monto (S/)</div>
+          <div class="wf-input">Categoría ▾</div>
+          <div class="wf-input">Fecha</div>
+          <div class="wf-input">Nota (opcional)</div>
+          <div class="row gap-sm" style="margin-top:auto;">
+            <div class="wf-btn" style="flex:1;">Cancelar</div>
+            <div class="wf-btn primary" style="flex:1;">Guardar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORIAS -->
+    <div class="screen" data-screen="categories">
+      <div class="col p gap-md">
+        <div class="row" style="justify-content:space-between;">
+          <div class="wf-line" style="width:120px;height:16px;"></div>
+          <div class="wf-btn" style="padding:6px 12px;font-size:11px;">+ Categoría</div>
+        </div>
+        <div class="col gap-sm">
+          <div class="row divider gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-pill">Vivienda</div>
+            <div class="wf-line" style="width:50px;height:8px;margin-left:auto;"></div>
+          </div>
+          <div class="row divider gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-pill">Alimentación</div>
+            <div class="wf-line" style="width:50px;height:8px;margin-left:auto;"></div>
+          </div>
+          <div class="row divider gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-pill">Transporte</div>
+            <div class="wf-line" style="width:50px;height:8px;margin-left:auto;"></div>
+          </div>
+          <div class="row gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-pill" style="border-style:dashed;">+ Personalizada: Mascotas</div>
+            <div class="row gap-xs" style="margin-left:auto;">
+              <div class="wf-line" style="width:20px;height:12px;"></div>
+              <div class="wf-line" style="width:20px;height:12px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICACIONES -->
+    <div class="screen" data-screen="notifications">
+      <div class="col">
+        <div class="row p gap-sm divider" style="justify-content:space-between; align-items:center;">
+          <div class="wf-line" style="width:120px;height:14px;"></div>
+          <div class="wf-line" style="width:70px;height:10px;"></div>
+        </div>
+        <div class="col">
+          <div class="row gap-sm p divider" style="align-items:flex-start; background:#f7f7f7;">
+            <div class="wf-circle" style="width:24px;height:24px;">B</div>
+            <div class="col gap-xs">
+              <div class="wf-line" style="width:220px;height:10px;"></div>
+              <div class="wf-line" style="width:80px;height:8px;"></div>
+            </div>
+          </div>
+          <div class="row gap-sm p divider" style="align-items:flex-start;">
+            <div class="wf-circle" style="width:24px;height:24px;">B</div>
+            <div class="col gap-xs">
+              <div class="wf-line" style="width:200px;height:10px;"></div>
+              <div class="wf-line" style="width:80px;height:8px;"></div>
+            </div>
+          </div>
+          <div class="row gap-sm p" style="align-items:flex-start;">
+            <div class="wf-circle" style="width:24px;height:24px;">B</div>
+            <div class="col gap-xs">
+              <div class="wf-line" style="width:180px;height:10px;"></div>
+              <div class="wf-line" style="width:80px;height:8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORIAL DE TRANSACCIONES -->
+    <div class="screen" data-screen="history">
+      <div class="col p gap-md">
+        <div class="wf-line" style="width:160px;height:16px;"></div>
+        <div class="row gap-xs" style="flex-wrap:wrap;">
+          <div class="wf-pill">Usuario ▾</div>
+          <div class="wf-pill">Categoría ▾</div>
+          <div class="wf-pill">Fecha ▾</div>
+        </div>
+        <div class="col gap-sm">
+          <div class="row divider gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-circle" style="width:24px;height:24px;">A</div>
+            <div class="col gap-xs" style="flex:1;"><div class="wf-line" style="width:100px;height:9px;"></div><div class="wf-line" style="width:60px;height:7px;"></div></div>
+            <div class="wf-line" style="width:60px;height:10px;"></div>
+          </div>
+          <div class="row divider gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-circle" style="width:24px;height:24px;">B</div>
+            <div class="col gap-xs" style="flex:1;"><div class="wf-line" style="width:110px;height:9px;"></div><div class="wf-line" style="width:60px;height:7px;"></div></div>
+            <div class="wf-line" style="width:60px;height:10px;"></div>
+          </div>
+          <div class="row divider gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-circle" style="width:24px;height:24px;">A</div>
+            <div class="col gap-xs" style="flex:1;"><div class="wf-line" style="width:90px;height:9px;"></div><div class="wf-line" style="width:60px;height:7px;"></div></div>
+            <div class="wf-line" style="width:60px;height:10px;"></div>
+          </div>
+          <div class="row gap-sm" style="padding:8px 0; align-items:center;">
+            <div class="wf-circle" style="width:24px;height:24px;">B</div>
+            <div class="col gap-xs" style="flex:1;"><div class="wf-line" style="width:100px;height:9px;"></div><div class="wf-line" style="width:60px;height:7px;"></div></div>
+            <div class="wf-line" style="width:60px;height:10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESPACIO DE PAREJA -->
+    <div class="screen" data-screen="space">
+      <div class="col p gap-md" style="align-items:center; text-align:center; min-height:600px; justify-content:center;">
+        <div class="wf-line" style="width:160px;height:16px;"></div>
+        <div class="row gap-md">
+          <div class="col gap-xs" style="align-items:center;">
+            <div class="wf-circle" style="width:48px;height:48px;">Tú</div>
+            <div class="wf-line" style="width:50px;height:8px;"></div>
+          </div>
+          <div class="col gap-xs" style="align-items:center;">
+            <div class="wf-circle" style="width:48px;height:48px;">Pareja</div>
+            <div class="wf-line" style="width:50px;height:8px;"></div>
+          </div>
+        </div>
+        <div class="col gap-sm" style="width:260px; margin-top:16px;">
+          <div class="wf-btn primary">Invitar a mi pareja</div>
+          <div class="wf-btn">Desvincular espacio</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="wrap">
+  <p class="annotation">
+    Wireframe de baja fidelidad — sin color final ni tipografía definitiva. Ver <strong>Duofin_Sistema_Diseno.md</strong> para paleta (jade / ciruela / dorado), tipografías (Fraunces / Work Sans / Spline Sans Mono) y el motivo "traslape" aplicado al gráfico de balance.
+  </p>
+</div>
+
+<script>
+  const screens = ['login','register','accept-invite','dashboard','history','transaction','notifications','categories','space'];
+  const labels = {
+    login: 'Login',
+    register: 'Registro',
+    'accept-invite': 'Aceptar invitación',
+    dashboard: 'Dashboard',
+    history: 'Historial + filtros',
+    transaction: 'Nueva transacción',
+    notifications: 'Notificaciones',
+    categories: 'Categorías',
+    space: 'Espacio de pareja'
+  };
+  const nav = document.getElementById('nav');
+  screens.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = labels[s];
+    btn.dataset.target = s;
+    if (i === 0) btn.classList.add('active');
+    btn.onclick = () => {
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.screen').forEach(sc => sc.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector('.screen[data-screen="' + s + '"]').classList.add('active');
+    };
+    nav.appendChild(btn);
+  });
+  document.querySelector('.screen[data-screen="login"]').classList.add('active');
+</script>
+
+</body>
+</html>
