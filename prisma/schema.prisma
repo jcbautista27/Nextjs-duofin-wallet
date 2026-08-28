@@ -1,0 +1,117 @@
+// Duofin — Modelo de datos
+// Fuente: Duofin_Especificaciones_Tecnicas.md, sección 3.
+// Nota: adaptado a Prisma 7 (generador "prisma-client" con output explícito;
+// la URL de conexión vive en prisma.config.ts para el CLI y en el adapter
+// del cliente runtime, ver src/lib/prisma.ts).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  spaceId String?
+  space   Space?  @relation(fields: [spaceId], references: [id])
+
+  transactions  Transaction[]
+  categories    Category[]
+  notifications Notification[]
+
+  invitationsSent Invitation[] @relation("InvitationSender")
+}
+
+model Space {
+  id        String      @id @default(cuid())
+  name      String      @default("Espacio Duofin")
+  status    SpaceStatus @default(ACTIVE)
+  createdAt DateTime    @default(now())
+
+  users       User[]
+  categories  Category[]
+  invitations Invitation[]
+}
+
+enum SpaceStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+model Invitation {
+  id     String           @id @default(cuid())
+  email  String
+  status InvitationStatus @default(PENDING)
+  createdAt DateTime       @default(now())
+
+  spaceId String
+  space   Space  @relation(fields: [spaceId], references: [id])
+
+  invitedById String
+  invitedBy   User   @relation("InvitationSender", fields: [invitedById], references: [id])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+}
+
+model Category {
+  id        String          @id @default(cuid())
+  name      String
+  type      TransactionType
+  isDefault Boolean         @default(false)
+  createdAt DateTime        @default(now())
+
+  spaceId String
+  space   Space  @relation(fields: [spaceId], references: [id])
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id])
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id        String          @id @default(cuid())
+  amount    Decimal         @db.Decimal(10, 2)
+  type      TransactionType
+  date      DateTime
+  note      String?
+  createdAt DateTime        @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  notifications Notification[]
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String // usuario que RECIBE la notificación
+  user   User   @relation(fields: [userId], references: [id])
+
+  transactionId String?
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+}
