@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Duofin
 
-## Getting Started
+Web app de finanzas personales para parejas. Registro 100% manual de ingresos y gastos con una vista combinada del balance de la pareja.
 
-First, run the development server:
+## Stack
+
+Next.js 16 (App Router) · TypeScript · PostgreSQL (Supabase) · Prisma 7 · NextAuth.js v5 · Tailwind CSS v4 · shadcn/ui · Zod + React Hook Form · pnpm
+
+## Requisitos
+
+- Node.js 20+
+- pnpm 11
+- Base de datos PostgreSQL (Supabase / Neon)
+
+## Setup local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 1. Instalar dependencias (genera el cliente Prisma automáticamente)
+pnpm install
+
+# 2. Configurar variables de entorno
+cp .env.example .env
+#   - Rellena DATABASE_URL, DIRECT_URL, NEXTAUTH_SECRET y NEXTAUTH_URL
+#   - Genera el secret con: openssl rand -base64 32
+
+# 3. Aplicar migraciones y sembrar categorías predefinidas
+pnpm db:migrate
+pnpm db:seed
+
+# 4. Levantar el servidor de desarrollo
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> Nota: si modificas `prisma/schema.prisma`, vuelve a generar el cliente con `pnpm prisma generate` (ya se ejecuta en `postinstall`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+| Comando | Descripción |
+| ------- | ----------- |
+| `pnpm dev` | Servidor de desarrollo |
+| `pnpm build` | Build de producción |
+| `pnpm start` | Servidor de producción |
+| `pnpm lint` | ESLint |
+| `pnpm db:migrate` | Aplica migraciones pendientes (`migrate deploy`) |
+| `pnpm db:seed` | Siembra las categorías predefinidas |
 
-To learn more about Next.js, take a look at the following resources:
+## Despliegue en Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Sube este repositorio a GitHub.
+2. Importa el repo en [vercel.com](https://vercel.com) mediante "New Project".
+3. Confirma los comandos por defecto (build: `pnpm build`, salida: estándar de Next.js).
+4. En **Settings → Environment Variables**, agrega las mismas variables de `.env`:
+   - `DATABASE_URL` (connection string de Supabase por pooler)
+   - `DIRECT_URL` (conexión directa puerto 5432, usada por las migraciones)
+   - `NEXTAUTH_SECRET` (genera uno de producción con `openssl rand -base64 32`)
+   - `NEXTAUTH_URL` (la URL de tu deploy, ej. `https://duofin.vercel.app`)
+5. En la pestaña de Redis/Supabase del dashboard de Vercel o el servicio que uses, ejecuta las migraciones:
+   ```bash
+   pnpm db:migrate
+   pnpm db:seed
+   ```
+   contra la base de datos de producción apuntando a las variables de entorno de producción.
+6. Despliega. La primera visita hará el build y aplicará todo.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> No subas `.env` al repositorio. Solo se commitea `.env.example`.
 
-## Deploy on Vercel
+## Documentación
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Toda la documentación del proyecto vive en `docs/`: especificaciones funcionales y técnicas, sistema de diseño, wireframes y el backlog.
