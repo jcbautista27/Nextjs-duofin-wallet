@@ -21,12 +21,20 @@ export function getPrisma(): InstanceType<typeof PrismaClient> {
     );
   }
 
-  const adapter = new PrismaPg({ connectionString });
+  // Límite de conexiones en el pool: la conexión directa de Supabase permite
+  // como máximo 15 sesiones simultáneas. Se deja un margen razonable para
+  // que varias funciones serverless compartan el pool sin agotarlo.
+  const adapter = new PrismaPg({
+    connectionString,
+    max: 3,
+  });
   const client = new PrismaClient({ adapter });
 
-  if (process.env.NODE_ENV !== "production") {
-    globalForPrisma.prisma = client;
-  }
+  // Se cachea el cliente en el global SIEMPRE (también en producción) para
+  // reutilizar el pool de conexiones entre requests serverless de Vercel.
+  // (Next.js limpia el global en desarrollo; no cachearlo en producción
+  //  agotaba el pool y producía EMAXCONNSESSION.)
+  globalForPrisma.prisma = client;
 
   return client;
 }
