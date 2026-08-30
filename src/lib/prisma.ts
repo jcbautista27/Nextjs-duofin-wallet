@@ -8,10 +8,16 @@ const globalForPrisma = globalThis as unknown as {
 export function getPrisma(): InstanceType<typeof PrismaClient> {
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
 
-  const connectionString = process.env.DATABASE_URL;
+  // Se usa DIRECT_URL (conexión directa a Supabase, sin pgbouncer) para Prisma.
+  // El pooler de Supabase en modo transaccional (DATABASE_URL con
+  // pgbouncer=true) no garantiza que los queries de una transacción
+  // interactiva ($transaction) caigan en la misma conexión, lo que produce
+  // P2028 "Transaction not found". Al ser una app de baja concurrencia,
+  // la conexión directa es lo correcto.
+  const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
   if (!connectionString) {
     throw new Error(
-      "DATABASE_URL no está definida. Configúrala en .env (ver .env.example)."
+      "DIRECT_URL (o DATABASE_URL) no está definida. Configúrala en .env (ver .env.example)."
     );
   }
 
