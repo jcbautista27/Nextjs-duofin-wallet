@@ -8,25 +8,30 @@ const globalForPrisma = globalThis as unknown as {
 export function getPrisma(): InstanceType<typeof PrismaClient> {
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
 
-  // Se usa DIRECT_URL (conexión directa a Supabase, sin pgbouncer) para Prisma.
-  // El pooler de Supabase en modo transaccional (DATABASE_URL con
-  // pgbouncer=true) no garantiza que los queries de una transacción
-  // interactiva ($transaction) caigan en la misma conexión, lo que produce
-  // P2028 "Transaction not found". Al ser una app de baja concurrencia,
-  // la conexión directa es lo correcto.
-  const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
+  // Se usa DATABASE_URL (pooler de Supabase en modo transacción, puerto 6543
+  // con ?pgbouncer=true) para el runtime de Prisma. Este pooler está pensado
+  // para serverless (Vercel): multiplexa muchas conexiones de cliente sobre
+  // pocas conexiones físicas, sin el límite de 15 de la conexión directa.
+  // (Usar DIRECT_URL directa agotaba el pool_size de 15 ante varias
+  // instancias serverless -> EMAXCONNSESSION. Ver notas en espacio-api.)
+  //
+  // IMPORTANTE: el pooler en modo transacción NO soporta transacciones
+  // interactivas ($transaction(fn)); hay que usar queries simples o
+  // $transaction([...]) en modo batch, como se hace en los endpoints.
+  const connectionString = process.env.DATABASE_URL ?? process.env.DIRECT_URL;
   if (!connectionString) {
     throw new Error(
-      "DIRECT_URL (o DATABASE_URL) no está definida. Configúrala en .env (ver .env.example)."
+      "DATABASE_URL no está definida. Configúrala en .env (ver .env.example)."
     );
   }
 
-  // Límite de conexiones en el pool: la conexión directa de Supabase permite
-  // como máximo 15 sesiones simultáneas. Se deja un margen razonable para
-  // que varias funciones serverless compartan el pool sin agotarlo.
+  // Pool pequeño y con timeouts finitos: apropiado para serverless. Fallar
+  // rápido (connectionTimeoutMillis finito) evita colas interminables.
   const adapter = new PrismaPg({
     connectionString,
-    max: 3,
+    max: 2,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 10_000,
   });
   const client = new PrismaClient({ adapter });
 

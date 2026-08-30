@@ -22,27 +22,28 @@ export async function POST() {
 
     // Regla de negocio: las categorías predefinidas se instancian al crear
     // cada Space (backlog 1.5 / 3.1).
-    const space = await prisma.$transaction(async (tx) => {
-      const created = await tx.space.create({
-        data: { name: "Espacio Duofin", status: "ACTIVE" },
-      });
+    //
+    // No se usa $transaction(fn) interactiva: no es compatible con el pooler
+    // de Supabase en modo transacción (P2028 "Transaction not found"). Se
+    // usan queries simples + $transaction([...]) en modo batch.
+    const space = await prisma.space.create({
+      data: { name: "Espacio Duofin", status: "ACTIVE" },
+    });
 
-      await tx.category.createMany({
+    await prisma.$transaction([
+      prisma.category.createMany({
         data: DEFAULT_CATEGORIES.map((category) => ({
           name: category.name,
           type: category.type,
           isDefault: true,
-          spaceId: created.id,
+          spaceId: space.id,
         })),
-      });
-
-      await tx.user.update({
+      }),
+      prisma.user.update({
         where: { id: user.id },
-        data: { spaceId: created.id },
-      });
-
-      return created;
-    });
+        data: { spaceId: space.id },
+      }),
+    ]);
 
     return Response.json({ space }, { status: 201 });
   } catch (error) {
