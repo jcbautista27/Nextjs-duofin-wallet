@@ -110,8 +110,13 @@ export function TransactionList({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Filters */}
-      <div className="grid grid-cols-2 gap-2 lg:flex lg:flex-wrap">
+      {/* Create + Filters */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <TransactionForm
+          categories={categories}
+          onSaved={() => fetchTransactions(filters)}
+        />
+        <div className="grid grid-cols-2 gap-2 lg:flex lg:flex-wrap">
         <Select
           value={filters.userId}
           onChange={(e) => updateFilter("userId", e.target.value)}
@@ -152,6 +157,7 @@ export function TransactionList({
           className="border-input bg-background text-foreground h-9 w-full rounded-md border px-3 py-1 text-sm lg:w-auto"
           placeholder="Hasta"
         />
+        </div>
       </div>
 
       {/* Transaction list */}

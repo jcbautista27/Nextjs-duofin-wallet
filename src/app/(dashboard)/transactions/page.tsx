@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
-import { TransactionForm } from "@/components/transactions/transaction-form";
 import { TransactionList } from "@/components/transactions/transaction-list";
 
 export const dynamic = "force-dynamic";
@@ -43,12 +42,9 @@ export default async function TransactionsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-semibold">
-          Transacciones
-        </h1>
-        <TransactionForm categories={categories} />
-      </div>
+      <h1 className="font-display text-2xl font-semibold">
+        Transacciones
+      </h1>
 
       <TransactionList
         initialTransactions={transactions.map((t) => ({
