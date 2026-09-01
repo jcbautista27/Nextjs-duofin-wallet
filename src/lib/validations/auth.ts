@@ -11,5 +11,12 @@ export const loginSchema = z.object({
   password: z.string().min(1, "La contraseña es obligatoria"),
 });
 
+export const pinSchema = z.object({
+  pin: z
+    .string()
+    .regex(/^\d{6}$/, "El PIN debe tener exactamente 6 dígitos"),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+export type PinInput = z.infer<typeof pinSchema>;

@@ -3,7 +3,9 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
-import { loginSchema } from "@/lib/validations/auth";
+import { loginSchema, pinSchema } from "@/lib/validations/auth";
+import { DEVICE_COOKIE } from "@/lib/device";
+import { verifyPinForDevice } from "@/lib/pin";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -15,8 +17,45 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       credentials: {
         email: {},
         password: {},
+        mode: {},
+        pin: {},
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
+        // Login rápido con PIN: verifica el PIN del dispositivo contra el
+        // deviceToken (cookie httpOnly). Sin deviceToken válido siempre falla.
+        if (credentials?.mode === "pin") {
+          const parsed = pinSchema.safeParse({ pin: credentials.pin });
+          if (!parsed.success) return null;
+
+          // NextAuth inyecta las cookies del pedido en el objeto Request.
+          // Las tipan exactas no lo exponen, así que se lee de forma segura.
+          const requestWithCookies = request as Request & {
+            cookies?: { get?: (name: string) => { value: string } | undefined };
+          };
+          let token: string | undefined;
+          if (typeof requestWithCookies.cookies?.get === "function") {
+            token = requestWithCookies.cookies.get(DEVICE_COOKIE)?.value;
+          }
+          if (!token) {
+            const cookieHeader = request?.headers?.get("cookie") ?? "";
+            token = cookieHeader
+              .split(";")
+              .map((c) => c.trim())
+              .find((c) => c.startsWith(`${DEVICE_COOKIE}=`))
+              ?.slice(DEVICE_COOKIE.length + 1);
+          }
+
+          const result = await verifyPinForDevice(token, parsed.data.pin);
+          if (!result.ok) return null;
+
+          return {
+            id: result.user.id,
+            name: result.user.name,
+            email: result.user.email,
+            spaceId: result.user.spaceId,
+          };
+        }
+
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
