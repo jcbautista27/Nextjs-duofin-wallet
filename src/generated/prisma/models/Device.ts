@@ -20,8 +20,18 @@ export type DeviceModel = runtime.Types.Result.DefaultSelection<Prisma.$DevicePa
 
 export type AggregateDevice = {
   _count: DeviceCountAggregateOutputType | null
+  _avg: DeviceAvgAggregateOutputType | null
+  _sum: DeviceSumAggregateOutputType | null
   _min: DeviceMinAggregateOutputType | null
   _max: DeviceMaxAggregateOutputType | null
+}
+
+export type DeviceAvgAggregateOutputType = {
+  pinAttempts: number | null
+}
+
+export type DeviceSumAggregateOutputType = {
+  pinAttempts: number | null
 }
 
 export type DeviceMinAggregateOutputType = {
@@ -29,6 +39,7 @@ export type DeviceMinAggregateOutputType = {
   deviceTokenHash: string | null
   pinHash: string | null
   pinEnabled: boolean | null
+  pinAttempts: number | null
   createdAt: Date | null
   lastUsedAt: Date | null
   userId: string | null
@@ -39,6 +50,7 @@ export type DeviceMaxAggregateOutputType = {
   deviceTokenHash: string | null
   pinHash: string | null
   pinEnabled: boolean | null
+  pinAttempts: number | null
   createdAt: Date | null
   lastUsedAt: Date | null
   userId: string | null
@@ -49,6 +61,7 @@ export type DeviceCountAggregateOutputType = {
   deviceTokenHash: number
   pinHash: number
   pinEnabled: number
+  pinAttempts: number
   createdAt: number
   lastUsedAt: number
   userId: number
@@ -56,11 +69,20 @@ export type DeviceCountAggregateOutputType = {
 }
 
 
+export type DeviceAvgAggregateInputType = {
+  pinAttempts?: true
+}
+
+export type DeviceSumAggregateInputType = {
+  pinAttempts?: true
+}
+
 export type DeviceMinAggregateInputType = {
   id?: true
   deviceTokenHash?: true
   pinHash?: true
   pinEnabled?: true
+  pinAttempts?: true
   createdAt?: true
   lastUsedAt?: true
   userId?: true
@@ -71,6 +93,7 @@ export type DeviceMaxAggregateInputType = {
   deviceTokenHash?: true
   pinHash?: true
   pinEnabled?: true
+  pinAttempts?: true
   createdAt?: true
   lastUsedAt?: true
   userId?: true
@@ -81,6 +104,7 @@ export type DeviceCountAggregateInputType = {
   deviceTokenHash?: true
   pinHash?: true
   pinEnabled?: true
+  pinAttempts?: true
   createdAt?: true
   lastUsedAt?: true
   userId?: true
@@ -125,6 +149,18 @@ export type DeviceAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: DeviceAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: DeviceSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: DeviceMinAggregateInputType
@@ -155,6 +191,8 @@ export type DeviceGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: DeviceCountAggregateInputType | true
+  _avg?: DeviceAvgAggregateInputType
+  _sum?: DeviceSumAggregateInputType
   _min?: DeviceMinAggregateInputType
   _max?: DeviceMaxAggregateInputType
 }
@@ -164,10 +202,13 @@ export type DeviceGroupByOutputType = {
   deviceTokenHash: string
   pinHash: string | null
   pinEnabled: boolean
+  pinAttempts: number
   createdAt: Date
   lastUsedAt: Date
   userId: string
   _count: DeviceCountAggregateOutputType | null
+  _avg: DeviceAvgAggregateOutputType | null
+  _sum: DeviceSumAggregateOutputType | null
   _min: DeviceMinAggregateOutputType | null
   _max: DeviceMaxAggregateOutputType | null
 }
@@ -195,6 +236,7 @@ export type DeviceWhereInput = {
   deviceTokenHash?: Prisma.StringFilter<"Device"> | string
   pinHash?: Prisma.StringNullableFilter<"Device"> | string | null
   pinEnabled?: Prisma.BoolFilter<"Device"> | boolean
+  pinAttempts?: Prisma.IntFilter<"Device"> | number
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   lastUsedAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   userId?: Prisma.StringFilter<"Device"> | string
@@ -206,6 +248,7 @@ export type DeviceOrderByWithRelationInput = {
   deviceTokenHash?: Prisma.SortOrder
   pinHash?: Prisma.SortOrderInput | Prisma.SortOrder
   pinEnabled?: Prisma.SortOrder
+  pinAttempts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -220,6 +263,7 @@ export type DeviceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DeviceWhereInput | Prisma.DeviceWhereInput[]
   pinHash?: Prisma.StringNullableFilter<"Device"> | string | null
   pinEnabled?: Prisma.BoolFilter<"Device"> | boolean
+  pinAttempts?: Prisma.IntFilter<"Device"> | number
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   lastUsedAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   userId?: Prisma.StringFilter<"Device"> | string
@@ -231,12 +275,15 @@ export type DeviceOrderByWithAggregationInput = {
   deviceTokenHash?: Prisma.SortOrder
   pinHash?: Prisma.SortOrderInput | Prisma.SortOrder
   pinEnabled?: Prisma.SortOrder
+  pinAttempts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   _count?: Prisma.DeviceCountOrderByAggregateInput
+  _avg?: Prisma.DeviceAvgOrderByAggregateInput
   _max?: Prisma.DeviceMaxOrderByAggregateInput
   _min?: Prisma.DeviceMinOrderByAggregateInput
+  _sum?: Prisma.DeviceSumOrderByAggregateInput
 }
 
 export type DeviceScalarWhereWithAggregatesInput = {
@@ -247,6 +294,7 @@ export type DeviceScalarWhereWithAggregatesInput = {
   deviceTokenHash?: Prisma.StringWithAggregatesFilter<"Device"> | string
   pinHash?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
   pinEnabled?: Prisma.BoolWithAggregatesFilter<"Device"> | boolean
+  pinAttempts?: Prisma.IntWithAggregatesFilter<"Device"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Device"> | Date | string
   lastUsedAt?: Prisma.DateTimeWithAggregatesFilter<"Device"> | Date | string
   userId?: Prisma.StringWithAggregatesFilter<"Device"> | string
@@ -257,6 +305,7 @@ export type DeviceCreateInput = {
   deviceTokenHash: string
   pinHash?: string | null
   pinEnabled?: boolean
+  pinAttempts?: number
   createdAt?: Date | string
   lastUsedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDevicesInput
@@ -267,6 +316,7 @@ export type DeviceUncheckedCreateInput = {
   deviceTokenHash: string
   pinHash?: string | null
   pinEnabled?: boolean
+  pinAttempts?: number
   createdAt?: Date | string
   lastUsedAt?: Date | string
   userId: string
@@ -277,6 +327,7 @@ export type DeviceUpdateInput = {
   deviceTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   pinHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pinEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pinAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastUsedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDevicesNestedInput
@@ -287,6 +338,7 @@ export type DeviceUncheckedUpdateInput = {
   deviceTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   pinHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pinEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pinAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastUsedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -297,6 +349,7 @@ export type DeviceCreateManyInput = {
   deviceTokenHash: string
   pinHash?: string | null
   pinEnabled?: boolean
+  pinAttempts?: number
   createdAt?: Date | string
   lastUsedAt?: Date | string
   userId: string
@@ -307,6 +360,7 @@ export type DeviceUpdateManyMutationInput = {
   deviceTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   pinHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pinEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pinAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastUsedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -316,6 +370,7 @@ export type DeviceUncheckedUpdateManyInput = {
   deviceTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   pinHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pinEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pinAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastUsedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -336,9 +391,14 @@ export type DeviceCountOrderByAggregateInput = {
   deviceTokenHash?: Prisma.SortOrder
   pinHash?: Prisma.SortOrder
   pinEnabled?: Prisma.SortOrder
+  pinAttempts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+}
+
+export type DeviceAvgOrderByAggregateInput = {
+  pinAttempts?: Prisma.SortOrder
 }
 
 export type DeviceMaxOrderByAggregateInput = {
@@ -346,6 +406,7 @@ export type DeviceMaxOrderByAggregateInput = {
   deviceTokenHash?: Prisma.SortOrder
   pinHash?: Prisma.SortOrder
   pinEnabled?: Prisma.SortOrder
+  pinAttempts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -356,9 +417,14 @@ export type DeviceMinOrderByAggregateInput = {
   deviceTokenHash?: Prisma.SortOrder
   pinHash?: Prisma.SortOrder
   pinEnabled?: Prisma.SortOrder
+  pinAttempts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   lastUsedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+}
+
+export type DeviceSumOrderByAggregateInput = {
+  pinAttempts?: Prisma.SortOrder
 }
 
 export type DeviceCreateNestedManyWithoutUserInput = {
@@ -403,11 +469,20 @@ export type DeviceUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.DeviceScalarWhereInput | Prisma.DeviceScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DeviceCreateWithoutUserInput = {
   id?: string
   deviceTokenHash: string
   pinHash?: string | null
   pinEnabled?: boolean
+  pinAttempts?: number
   createdAt?: Date | string
   lastUsedAt?: Date | string
 }
@@ -417,6 +492,7 @@ export type DeviceUncheckedCreateWithoutUserInput = {
   deviceTokenHash: string
   pinHash?: string | null
   pinEnabled?: boolean
+  pinAttempts?: number
   createdAt?: Date | string
   lastUsedAt?: Date | string
 }
@@ -455,6 +531,7 @@ export type DeviceScalarWhereInput = {
   deviceTokenHash?: Prisma.StringFilter<"Device"> | string
   pinHash?: Prisma.StringNullableFilter<"Device"> | string | null
   pinEnabled?: Prisma.BoolFilter<"Device"> | boolean
+  pinAttempts?: Prisma.IntFilter<"Device"> | number
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   lastUsedAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   userId?: Prisma.StringFilter<"Device"> | string
@@ -465,6 +542,7 @@ export type DeviceCreateManyUserInput = {
   deviceTokenHash: string
   pinHash?: string | null
   pinEnabled?: boolean
+  pinAttempts?: number
   createdAt?: Date | string
   lastUsedAt?: Date | string
 }
@@ -474,6 +552,7 @@ export type DeviceUpdateWithoutUserInput = {
   deviceTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   pinHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pinEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pinAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastUsedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -483,6 +562,7 @@ export type DeviceUncheckedUpdateWithoutUserInput = {
   deviceTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   pinHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pinEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pinAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastUsedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -492,6 +572,7 @@ export type DeviceUncheckedUpdateManyWithoutUserInput = {
   deviceTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   pinHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pinEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pinAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastUsedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -503,6 +584,7 @@ export type DeviceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   deviceTokenHash?: boolean
   pinHash?: boolean
   pinEnabled?: boolean
+  pinAttempts?: boolean
   createdAt?: boolean
   lastUsedAt?: boolean
   userId?: boolean
@@ -514,6 +596,7 @@ export type DeviceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deviceTokenHash?: boolean
   pinHash?: boolean
   pinEnabled?: boolean
+  pinAttempts?: boolean
   createdAt?: boolean
   lastUsedAt?: boolean
   userId?: boolean
@@ -525,6 +608,7 @@ export type DeviceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deviceTokenHash?: boolean
   pinHash?: boolean
   pinEnabled?: boolean
+  pinAttempts?: boolean
   createdAt?: boolean
   lastUsedAt?: boolean
   userId?: boolean
@@ -536,12 +620,13 @@ export type DeviceSelectScalar = {
   deviceTokenHash?: boolean
   pinHash?: boolean
   pinEnabled?: boolean
+  pinAttempts?: boolean
   createdAt?: boolean
   lastUsedAt?: boolean
   userId?: boolean
 }
 
-export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "deviceTokenHash" | "pinHash" | "pinEnabled" | "createdAt" | "lastUsedAt" | "userId", ExtArgs["result"]["device"]>
+export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "deviceTokenHash" | "pinHash" | "pinEnabled" | "pinAttempts" | "createdAt" | "lastUsedAt" | "userId", ExtArgs["result"]["device"]>
 export type DeviceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -562,6 +647,7 @@ export type $DevicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     deviceTokenHash: string
     pinHash: string | null
     pinEnabled: boolean
+    pinAttempts: number
     createdAt: Date
     lastUsedAt: Date
     userId: string
@@ -993,6 +1079,7 @@ export interface DeviceFieldRefs {
   readonly deviceTokenHash: Prisma.FieldRef<"Device", 'String'>
   readonly pinHash: Prisma.FieldRef<"Device", 'String'>
   readonly pinEnabled: Prisma.FieldRef<"Device", 'Boolean'>
+  readonly pinAttempts: Prisma.FieldRef<"Device", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Device", 'DateTime'>
   readonly lastUsedAt: Prisma.FieldRef<"Device", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Device", 'String'>

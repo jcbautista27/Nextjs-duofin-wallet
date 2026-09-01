@@ -154,6 +154,7 @@ export const DeviceScalarFieldEnum = {
   deviceTokenHash: 'deviceTokenHash',
   pinHash: 'pinHash',
   pinEnabled: 'pinEnabled',
+  pinAttempts: 'pinAttempts',
   createdAt: 'createdAt',
   lastUsedAt: 'lastUsedAt',
   userId: 'userId'

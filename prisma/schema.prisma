@@ -122,6 +122,7 @@ model Device {
   deviceTokenHash String   @unique // token largo aleatorio guardado en cookie httpOnly en el navegador
   pinHash         String? // hash del PIN de 6 dígitos (bcrypt); null si no está configurado/desactivado
   pinEnabled      Boolean  @default(false)
+  pinAttempts     Int      @default(0) // intentos fallidos consecutivos; bloquea tras 5
   createdAt       DateTime @default(now())
   lastUsedAt      DateTime @default(now())
 
