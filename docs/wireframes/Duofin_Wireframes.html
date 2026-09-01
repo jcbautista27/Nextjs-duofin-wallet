@@ -129,6 +129,9 @@
 </header>
 
 <nav id="nav"></nav>
+<div style="padding: 0 24px 12px; background:#fff; border-bottom:1px solid #ccc;">
+  <button id="theme-toggle" style="font-family:inherit;font-size:12px;padding:6px 12px;background:#333;color:#fff;border:none;cursor:pointer;">🌙 Modo oscuro (referencia)</button>
+</div>
 
 <main>
   <div class="wrap">
@@ -351,6 +354,43 @@
       </div>
     </div>
 
+    <!-- INGRESAR PIN -->
+    <div class="screen" data-screen="pin-login">
+      <div class="p col gap-md" style="height:100%; justify-content:center; align-items:center; min-height:600px; text-align:center;">
+        <div class="wf-circle" style="width:48px;height:48px;">LOGO</div>
+        <div class="wf-line" style="width:160px;height:14px;"></div>
+        <div class="row gap-sm" style="margin-top:10px;">
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+        </div>
+        <div class="wf-box" style="width:220px;height:220px;margin-top:16px;">teclado numérico 0-9</div>
+        <div class="wf-line" style="width:170px;height:10px;margin-top:12px;"></div>
+      </div>
+    </div>
+
+    <!-- CONFIGURAR PIN -->
+    <div class="screen" data-screen="pin-setup">
+      <div class="p col gap-md" style="height:100%; justify-content:center; align-items:center; min-height:600px; text-align:center;">
+        <div class="wf-line" style="width:220px;height:14px;"></div>
+        <div class="wf-line" style="width:180px;height:10px;"></div>
+        <div class="row gap-sm" style="margin-top:10px;">
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+          <div class="wf-circle" style="width:14px;height:14px;"></div>
+        </div>
+        <div class="wf-box" style="width:220px;height:220px;margin-top:16px;">teclado numérico 0-9</div>
+        <div class="wf-btn primary" style="width:220px;margin-top:12px;">Confirmar PIN</div>
+        <div class="wf-line" style="width:100px;height:10px;"></div>
+      </div>
+    </div>
+
     <!-- ESPACIO DE PAREJA -->
     <div class="screen" data-screen="space">
       <div class="col p gap-md" style="align-items:center; text-align:center; min-height:600px; justify-content:center;">
@@ -382,11 +422,13 @@
 </div>
 
 <script>
-  const screens = ['login','register','accept-invite','dashboard','history','transaction','notifications','categories','space'];
+  const screens = ['login','register','accept-invite','pin-login','pin-setup','dashboard','history','transaction','notifications','categories','space'];
   const labels = {
     login: 'Login',
     register: 'Registro',
     'accept-invite': 'Aceptar invitación',
+    'pin-login': 'Ingresar PIN',
+    'pin-setup': 'Configurar PIN',
     dashboard: 'Dashboard',
     history: 'Historial + filtros',
     transaction: 'Nueva transacción',
@@ -409,6 +451,18 @@
     nav.appendChild(btn);
   });
   document.querySelector('.screen[data-screen="login"]').classList.add('active');
+
+  document.getElementById('theme-toggle').onclick = function() {
+    document.body.classList.toggle('dark-ref');
+    const isDark = document.body.classList.contains('dark-ref');
+    this.textContent = isDark ? '☀️ Modo claro (referencia)' : '🌙 Modo oscuro (referencia)';
+    document.body.style.background = isDark ? '#1B211E' : '#EDEDED';
+    document.querySelectorAll('.screen').forEach(s => {
+      s.style.background = isDark ? '#232A26' : '#fff';
+      s.style.borderColor = isDark ? '#333B36' : '#999';
+      s.style.color = isDark ? '#EDEFEA' : '#333';
+    });
+  };
 </script>
 
 </body>

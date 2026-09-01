@@ -1,6 +1,6 @@
 # Backlog de Desarrollo — Duofin
 
-**Versión:** 1.0 (MVP)
+**Versión:** 1.1 (MVP + mejoras post-lanzamiento)
 **Documentos base:** Duofin_Especificaciones_Funcionales.md, Duofin_Especificaciones_Tecnicas.md
 **Propósito:** Lista secuencial y accionable de tareas para que un agente de código (ej. OpenCode) construya la app paso a paso, respetando dependencias.
 
@@ -18,7 +18,7 @@
   - *Aceptación:* un componente shadcn (ej. Button) se renderiza correctamente.
 - [ ] **0.4** Crear estructura de carpetas según especificaciones técnicas (sección 5).
   - *Aceptación:* carpetas `app/(auth)`, `app/(dashboard)`, `app/api`, `components`, `lib`, `types` existen.
-- [ ] **0.5** Configurar `.env.example` con variables necesarias (`DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`).
+- [ ] **0.5** Configurar `.env.example` con variables necesarias (`DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`).
 
 ---
 
@@ -26,7 +26,7 @@
 
 *Depende de: Fase 0*
 
-- [ ] **1.1** Crear base de datos PostgreSQL (Neon o Supabase) y obtener `DATABASE_URL`.
+- [ ] **1.1** Crear base de datos PostgreSQL (Neon o Supabase) y obtener `DATABASE_URL` (si es Supabase, también `DIRECT_URL` — ver especificaciones técnicas, sección 1). *Esta tarea es manual, la realiza la persona, no el agente.*
 - [ ] **1.2** Instalar y configurar Prisma (`prisma init`).
 - [ ] **1.3** Definir `schema.prisma` completo según especificaciones técnicas (sección 3): modelos `User`, `Space`, `Invitation`, `Category`, `Transaction` + enums.
   - *Aceptación:* `prisma validate` pasa sin errores.
@@ -127,6 +127,31 @@
 - [ ] **8.3** Configurar proyecto en Vercel, conectar variables de entorno de producción.
 - [ ] **8.4** Ejecutar migraciones en base de datos de producción (Neon/Supabase).
 - [ ] **8.5** Prueba end-to-end del flujo completo: registro → crear espacio → invitar pareja → aceptar → registrar transacciones (ambos usuarios) → revisar balance combinado → recibir notificación.
+
+---
+
+## Fase 9 — Login rápido con PIN + Modo oscuro
+
+*Depende de: Fase 8 (app ya desplegada y funcionando). Origen: `docs/changes/2026-08-30_pin-login-y-modo-oscuro.md`.*
+
+### PIN de acceso rápido
+- [ ] **9.1** Actualizar `schema.prisma`: agregar modelo `Device` (ver especificaciones técnicas, sección 3) y correr migración.
+- [ ] **9.2** Endpoint `POST /api/auth/pin/setup`: genera `deviceToken` (cookie httpOnly), hashea el PIN con bcrypt, crea/actualiza el registro `Device`.
+  - *Aceptación:* solo accesible con sesión autenticada activa (login completo previo).
+- [ ] **9.3** Endpoint `POST /api/auth/pin/verify`: valida `deviceToken` (cookie) + PIN recibido contra `pinHash`; si coincide, emite sesión.
+  - *Aceptación:* rechaza si no hay `deviceToken` válido, aunque el PIN sea correcto. Bloquea tras 5 intentos fallidos.
+- [ ] **9.4** Endpoint `DELETE /api/auth/pin`: desactiva el PIN (`pinEnabled: false`) para el dispositivo actual.
+- [ ] **9.5** UI "Configurar PIN" (pantalla 6.6 del sistema de diseño): aparece como paso opcional post primer login.
+- [ ] **9.6** UI "Ingresar PIN" (pantalla 6.5): reemplaza el login normal en accesos posteriores del mismo dispositivo, con opción "Usar contraseña en su lugar".
+- [ ] **9.7** Opción para desactivar el PIN desde configuración del dispositivo actual.
+
+### Modo oscuro
+- [ ] **9.8** Instalar y configurar `next-themes` (`ThemeProvider attribute="class" defaultTheme="system" enableSystem`).
+- [ ] **9.9** Agregar variables CSS del bloque `.dark` a `globals.css` (ver sistema de diseño, sección 4).
+  - *Aceptación:* al cambiar la preferencia del sistema operativo, la app cambia de tema sin recargar.
+- [ ] **9.10** Agregar toggle manual de tema (claro/oscuro/sistema) en la UI (ej. en configuración o header).
+  - *Aceptación:* la elección manual persiste entre sesiones (localStorage) y anula la preferencia del sistema hasta que el usuario la reinicie.
+- [ ] **9.11** Revisar todas las pantallas existentes (Fases 2 a 8) en modo oscuro para verificar contraste y legibilidad, especialmente en los montos (Spline Sans Mono) y el gráfico del "traslape".
 
 ---
 

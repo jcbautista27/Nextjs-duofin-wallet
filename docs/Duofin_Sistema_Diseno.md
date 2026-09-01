@@ -1,6 +1,6 @@
 # Sistema de Diseño — Duofin
 
-**Versión:** 1.0 (MVP)
+**Versión:** 1.1 (MVP)
 **Propósito:** Guía visual para que el agente de código implemente la UI de forma consistente (Tailwind + shadcn/ui).
 
 ---
@@ -35,6 +35,28 @@ Se evita deliberadamente la paleta genérica de IA (crema cálido + terracota `#
 | `--muted-foreground` | `#6B6F68` | Texto secundario. |
 
 **Nota:** los colores `jade`/`plum` son los valores por defecto asignados automáticamente (usuario principal = jade, invitado = plum). No son configurables en el MVP.
+
+### 2.1 Paleta — modo oscuro
+
+Mismo sistema de tokens, ajustado en luminosidad para fondo oscuro. Los tonos de identidad (jade/plum/gold) se aclaran para mantener contraste sobre fondo oscuro.
+
+| Token | Hex (oscuro) | Uso |
+|---|---|---|
+| `--background` | `#1B211E` | Fondo general (pino oscuro, no negro puro). |
+| `--foreground` | `#EDEFEA` | Texto principal. |
+| `--card` | `#232A26` | Fondo de tarjetas/superficies elevadas. |
+| `--partner-jade` | `#3FA383` | Jade aclarado para contraste sobre fondo oscuro. |
+| `--partner-jade-bg` | `#243830` | Fondo suave (oscuro) para tags del usuario jade. |
+| `--partner-plum` | `#C084A8` | Plum aclarado. |
+| `--partner-plum-bg` | `#382530` | Fondo suave (oscuro) para tags del usuario plum. |
+| `--combined-gold` | `#E0BB4A` | Gold aclarado — balance combinado, CTAs. |
+| `--combined-gold-bg` | `#3A311A` | Fondo suave (oscuro) para tarjetas de balance combinado. |
+| `--income` | `#3FA383` | Montos positivos. |
+| `--expense` | `#E0876A` | Montos negativos (ladrillo aclarado). |
+| `--border` | `#333B36` | Bordes y divisores. |
+| `--muted-foreground` | `#9AA097` | Texto secundario. |
+
+**Regla de implementación:** usar `next-themes` con estrategia `class` (agrega `class="dark"` al `<html>`) y definir ambos bloques de variables CSS (`:root` para claro, `.dark` para oscuro) — ver sección 4. Por defecto, `next-themes` respeta `prefers-color-scheme` del sistema; el toggle manual sobreescribe y persiste la elección en `localStorage`.
 
 ---
 
@@ -72,7 +94,7 @@ const workSans = Work_Sans({ subsets: ['latin'], variable: '--font-sans', weight
 const splineMono = Spline_Sans_Mono({ subsets: ['latin'], variable: '--font-mono', weight: ['400','500'] });
 ```
 
-### Variables CSS (globals.css, para tema shadcn/ui)
+### Variables CSS (globals.css, para tema shadcn/ui + next-themes)
 ```css
 :root {
   --background: 60 12% 96%;       /* #F5F6F3 */
@@ -94,7 +116,29 @@ const splineMono = Spline_Sans_Mono({ subsets: ['latin'], variable: '--font-mono
 
   --radius: 0.75rem;
 }
+
+.dark {
+  --background: 156 12% 12%;      /* #1B211E */
+  --foreground: 90 13% 92%;       /* #EDEFEA */
+  --card: 150 10% 15%;            /* #232A26 */
+
+  --primary: 43 68% 61%;          /* #E0BB4A */
+  --primary-foreground: 43 60% 15%;
+
+  --partner-jade: 161 43% 44%;    /* #3FA383 */
+  --partner-jade-bg: 150 25% 17%; /* #243830 */
+  --partner-plum: 320 30% 65%;    /* #C084A8 */
+  --partner-plum-bg: 330 22% 18%; /* #382530 */
+
+  --income: 161 43% 44%;
+  --expense: 14 68% 65%;          /* #E0876A */
+
+  --border: 140 8% 22%;           /* #333B36 */
+  --muted-foreground: 100 6% 62%; /* #9AA097 */
+}
 ```
+
+**Setup de next-themes** (en `app/layout.tsx`, envolviendo el contenido con `<ThemeProvider attribute="class" defaultTheme="system" enableSystem>`).
 
 ### Tailwind config (extend)
 ```ts
@@ -186,3 +230,36 @@ colors: {
 │ [Desvincular espacio]             │
 └──────────────────────────────────┘
 ```
+
+### 6.5 Ingresar PIN (acceso rápido)
+```
+┌─────────────────────────────────┐
+│         [Logo Duofin]           │
+│      Hola de nuevo, Tú           │
+│                                  │
+│      ○ ○ ○ ○ ○ ○                │
+│      [ teclado numérico ]       │
+│                                  │
+│   Usar contraseña en su lugar   │
+└─────────────────────────────────┘
+```
+
+### 6.6 Configurar PIN (post primer login)
+```
+┌─────────────────────────────────┐
+│  Crea un PIN de acceso rápido    │
+│  para este dispositivo            │
+│                                  │
+│      ○ ○ ○ ○ ○ ○                │
+│      [ teclado numérico ]       │
+│                                  │
+│   [   Confirmar PIN   ]         │
+│   Ahora no                       │
+└─────────────────────────────────┘
+```
+
+---
+
+## 7. Changelog
+- **v1.1** (2026-08-30): agregada paleta de modo oscuro (sección 2.1), setup de next-themes, wireframes de PIN (6.5, 6.6). Ver `docs/changes/2026-08-30_pin-login-y-modo-oscuro.md`.
+- **v1.0** (2026-08-2026): versión inicial del MVP.

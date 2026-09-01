@@ -1,6 +1,6 @@
 # Especificaciones Técnicas — Duofin
 
-**Versión:** 1.0 (MVP)
+**Versión:** 1.1
 **Fecha:** Agosto 2026
 **Documento base:** Duofin_Especificaciones_Funcionales.md
 **Propósito:** Guiar a un agente de código (ej. OpenCode) en la construcción de la aplicación.
@@ -17,9 +17,10 @@
 | ORM | **Prisma** | Migraciones y cliente tipado. |
 | Autenticación | **NextAuth.js (Auth.js)** | Estrategia de credenciales (email + password) para el MVP. |
 | Estilos | **Tailwind CSS** | |
+| Tema claro/oscuro | **next-themes** | Maneja preferencia de sistema + toggle manual, persistido en cookie/localStorage. |
 | Componentes UI | **shadcn/ui** | Componentes accesibles basados en Radix + Tailwind. |
 | Validación de formularios | **Zod + React Hook Form** | Validación tanto en cliente como en servidor (API routes). |
-| Hosting | **Vercel** (app) + **Neon o Supabase** (Postgres) | Planes gratuitos suficientes para MVP. |
+| Hosting | **Vercel** (app) + **Neon o Supabase** (Postgres) | Planes gratuitos suficientes para MVP. **Si se usa Supabase:** el proyecto requiere DOS variables de entorno — `DATABASE_URL` (puerto 6543, pooler) y `DIRECT_URL` (puerto 5432, conexión directa) — porque Prisma necesita una conexión directa para ejecutar migraciones. Ver `datasource db` en la sección 3. |
 | Gestor de paquetes | **pnpm** | |
 
 ---
@@ -55,8 +56,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -72,6 +74,7 @@ model User {
   transactions  Transaction[]
   categories    Category[]
   notifications Notification[]
+  devices       Device[]
 
   invitationsSent     Invitation[] @relation("InvitationSender")
 }
@@ -161,6 +164,18 @@ model Notification {
   transactionId String?
   transaction   Transaction?  @relation(fields: [transactionId], references: [id])
 }
+
+model Device {
+  id              String   @id @default(cuid())
+  deviceTokenHash String   @unique   // token largo, aleatorio, guardado en cookie httpOnly en el navegador
+  pinHash         String?            // hash del PIN de 6 dígitos (bcrypt); null si el PIN no está configurado/fue desactivado
+  pinEnabled      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  lastUsedAt      DateTime @default(now())
+
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+}
 ```
 
 **Notas del modelo:**
@@ -168,6 +183,7 @@ model Notification {
 - `Category` pertenece siempre a un `Space` (no a un usuario individual), lo cual refleja que son compartidas.
 - Un `User` solo puede tener un `spaceId` a la vez (relación 1:N desde `Space`), cumpliendo la regla de "un espacio a la vez".
 - Las categorías predefinidas (`isDefault: true`) se crean automáticamente al crear un nuevo `Space`, vía seed script.
+- `Device` representa un dispositivo/navegador donde el usuario configuró login rápido con PIN. El `deviceTokenHash` identifica el dispositivo (guardado como cookie httpOnly `deviceToken` sin hashear en el cliente); el `pinHash` nunca se compara en cliente, siempre server-side. Si `pinEnabled` es `false`, ese dispositivo requiere login completo.
 
 ---
 
@@ -192,6 +208,9 @@ model Notification {
 | GET | `/api/balance` | Balance individual + combinado del espacio. |
 | GET | `/api/notifications` | Listar notificaciones del usuario (nuevas transacciones de la pareja). |
 | PUT | `/api/notifications/:id/read` | Marcar notificación como leída. |
+| POST | `/api/auth/pin/setup` | Configurar PIN de 6 dígitos para el dispositivo actual (requiere sesión ya autenticada). Crea/actualiza el registro `Device`. |
+| POST | `/api/auth/pin/verify` | Iniciar sesión rápida con PIN + `deviceToken` (cookie). Devuelve sesión si el PIN coincide. |
+| DELETE | `/api/auth/pin` | Desactivar el PIN en el dispositivo actual (`pinEnabled: false`). |
 
 **Reglas de autorización comunes a todos los endpoints de datos:**
 - Todo endpoint debe validar sesión activa (NextAuth).
@@ -245,7 +264,8 @@ duofin/
 
 - Contraseñas hasheadas con **bcrypt** antes de guardarse (`passwordHash`).
 - Todas las API routes validan que el `spaceId` de los recursos consultados/modificados coincida con el `spaceId` del usuario autenticado.
-- Variables sensibles (`DATABASE_URL`, `NEXTAUTH_SECRET`) gestionadas vía variables de entorno, nunca hardcodeadas.
+- Variables sensibles (`DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`) gestionadas vía variables de entorno, nunca hardcodeadas.
+- **PIN de acceso rápido:** el PIN se hashea con bcrypt igual que la contraseña (nunca en texto plano). El `deviceToken` es un valor aleatorio largo (≥32 bytes) generado server-side, guardado como cookie `httpOnly`, `secure`, `sameSite=strict` — nunca accesible desde JavaScript del cliente. Verificar PIN sin el `deviceToken` válido correspondiente debe fallar siempre (el PIN por sí solo, sin el dispositivo correcto, no es suficiente). Limitar intentos fallidos de PIN (ej. bloquear tras 5 intentos y exigir login completo) para prevenir fuerza bruta sobre 6 dígitos.
 
 ---
 
@@ -262,3 +282,9 @@ duofin/
   7. Dashboard de balance (individual + combinado).
   8. Notificaciones in-app.
 - Cualquier decisión técnica no cubierta aquí (ej. librería específica de notificaciones) debe resolverse siguiendo el stack ya definido, evitando introducir dependencias no listadas sin antes confirmarlo.
+
+---
+
+## Changelog
+- **v1.1** (2026-08-30): agregado modelo `Device` y endpoints de PIN (login rápido), agregado `next-themes` para modo oscuro. Ver `docs/changes/2026-08-30_pin-login-y-modo-oscuro.md`.
+- **v1.0** (2026-08-2026): versión inicial del MVP.

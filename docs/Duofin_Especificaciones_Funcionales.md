@@ -1,6 +1,6 @@
 # Especificaciones Funcionales — Duofin
 
-**Versión:** 1.0 (MVP)
+**Versión:** 1.1
 **Fecha:** Agosto 2026
 **Tipo de producto:** Web App para gestión de finanzas personales en pareja
 
@@ -96,6 +96,16 @@ Cada transacción (ingreso o gasto) registrada manualmente debe incluir:
 - No se contemplan recordatorios proactivos (ej. "no has registrado gastos hoy") en el MVP.
 - *(A definir en diseño):* ¿la notificación es solo in-app o también por correo electrónico?
 
+### 4.6 Login rápido con PIN
+- Tras un primer inicio de sesión completo (email + contraseña) en un dispositivo, el usuario puede configurar un **PIN de 6 dígitos** para acceder más rápido en ese mismo dispositivo.
+- El PIN es local al dispositivo: no sirve para iniciar sesión desde un dispositivo nuevo, donde siempre se requiere el login completo.
+- El usuario puede desactivar el PIN en cualquier momento desde el dispositivo donde lo configuró.
+
+### 4.7 Modo oscuro
+- La app soporta tema claro y oscuro.
+- Por defecto, sigue la preferencia del sistema operativo del usuario.
+- El usuario puede anular esa preferencia manualmente con un toggle, en cualquier momento.
+
 ---
 
 ## 5. Flujos de usuario principales
@@ -146,3 +156,9 @@ Cada transacción (ingreso o gasto) registrada manualmente debe incluir:
 - Reportes y gráficos avanzados, exportación (CSV/PDF).
 - Gestión de deudas e inversiones.
 - Soporte multi-moneda.
+
+---
+
+## Changelog
+- **v1.1** (2026-08-30): agregado login rápido con PIN (sección 4.6) y modo oscuro (sección 4.7). Ver `docs/changes/2026-08-30_pin-login-y-modo-oscuro.md`.
+- **v1.0** (2026-08-2026): versión inicial del MVP.

@@ -47,3 +47,8 @@ export type Transaction = Prisma.TransactionModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model Device
+ * 
+ */
+export type Device = Prisma.DeviceModel

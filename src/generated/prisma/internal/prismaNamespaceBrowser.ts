@@ -56,7 +56,8 @@ export const ModelName = {
   Invitation: 'Invitation',
   Category: 'Category',
   Transaction: 'Transaction',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  Device: 'Device'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -146,6 +147,19 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const DeviceScalarFieldEnum = {
+  id: 'id',
+  deviceTokenHash: 'deviceTokenHash',
+  pinHash: 'pinHash',
+  pinEnabled: 'pinEnabled',
+  createdAt: 'createdAt',
+  lastUsedAt: 'lastUsedAt',
+  userId: 'userId'
+} as const
+
+export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum]
 
 
 export const SortOrder = {
