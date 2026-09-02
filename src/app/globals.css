@@ -109,6 +109,55 @@
   --sidebar-ring: hsl(43 65% 47%);
 }
 
+/* Tema oscuro — Duofin_Sistema_Diseno.md, sección 2.1 y 4.
+   next-themes agrega la clase .dark al <html> y anula estas variables. */
+.dark {
+  --background: hsl(156 12% 12%);       /* #1B211E */
+  --foreground: hsl(90 13% 92%);        /* #EDEFEA */
+
+  --card: hsl(150 10% 15%);             /* #232A26 */
+  --card-foreground: hsl(90 13% 92%);
+  --popover: hsl(150 10% 15%);
+  --popover-foreground: hsl(90 13% 92%);
+
+  --primary: hsl(43 68% 61%);           /* #E0BB4A - combined-gold */
+  --primary-foreground: hsl(43 60% 15%);
+
+  --partner-jade: hsl(161 43% 44%);     /* #3FA383 */
+  --partner-jade-bg: hsl(150 25% 17%);  /* #243830 */
+  --partner-plum: hsl(320 30% 65%);     /* #C084A8 */
+  --partner-plum-bg: hsl(330 22% 18%);  /* #382530 */
+
+  --income: hsl(161 43% 44%);
+  --expense: hsl(14 68% 65%);           /* #E0876A */
+
+  --secondary: hsl(150 8% 20%);
+  --secondary-foreground: hsl(90 13% 92%);
+  --muted: hsl(140 8% 18%);
+  --muted-foreground: hsl(100 6% 62%);  /* #9AA097 */
+  --accent: hsl(150 25% 17%);
+  --accent-foreground: hsl(90 13% 92%);
+  --destructive: hsl(14 68% 65%);
+  --border: hsl(140 8% 22%);            /* #333B36 */
+  --input: hsl(140 8% 22%);
+  --ring: hsl(43 68% 61%);
+
+  --chart-1: hsl(161 43% 44%);
+  --chart-2: hsl(320 30% 65%);
+  --chart-3: hsl(43 68% 61%);
+  --chart-4: hsl(14 68% 65%);
+  --chart-5: hsl(100 6% 62%);
+
+  --sidebar: hsl(150 10% 15%);
+  --sidebar-foreground: hsl(90 13% 92%);
+  --sidebar-primary: hsl(43 68% 61%);
+  --sidebar-primary-foreground: hsl(43 60% 15%);
+  --sidebar-accent: hsl(150 25% 17%);
+  --sidebar-accent-foreground: hsl(90 13% 92%);
+  --sidebar-border: hsl(140 8% 22%);
+  --sidebar-ring: hsl(43 68% 61%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -4,8 +4,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
+import { PinVerifyForm } from "@/components/pin-verify-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -30,6 +31,18 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [deviceHasPin, setDeviceHasPin] = useState<boolean | null>(null);
+  const [showPin, setShowPin] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/auth/pin")
+      .then((res) => res.json())
+      .then((data) => {
+        setDeviceHasPin(data.hasPin ?? false);
+        setShowPin(data.hasPin ?? false);
+      })
+      .catch(() => setDeviceHasPin(false));
+  }, []);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -55,63 +68,77 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-sm">
-      <h1 className="font-display text-2xl font-semibold text-foreground">
-        Bienvenido de nuevo
-      </h1>
-      <p className="text-muted-foreground mt-1 mb-6 text-sm">
-        Inicia sesión para entrar a tu espacio Duofin
-      </p>
+      {deviceHasPin === null ? null : showPin ? (
+        <>
+          <h1 className="font-display text-2xl font-semibold text-foreground">
+            Ingresa tu PIN
+          </h1>
+          <p className="text-muted-foreground mt-1 mb-6 text-center text-sm">
+            Acceso rápido a tu espacio Duofin
+          </p>
+          <PinVerifyForm onUsePassword={() => setShowPin(false)} />
+        </>
+      ) : (
+        <>
+          <h1 className="font-display text-2xl font-semibold text-foreground">
+            Bienvenido de nuevo
+          </h1>
+          <p className="text-muted-foreground mt-1 mb-6 text-sm">
+            Inicia sesión para entrar a tu espacio Duofin
+          </p>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" autoComplete="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" autoComplete="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Contraseña</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    autoComplete="current-password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contraseña</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        autoComplete="current-password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {serverError && (
-            <p className="text-destructive text-sm">{serverError}</p>
-          )}
+              {serverError && (
+                <p className="text-destructive text-sm">{serverError}</p>
+              )}
 
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Ingresando…" : "Iniciar sesión"}
-          </Button>
-        </form>
-      </Form>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? "Ingresando…" : "Iniciar sesión"}
+              </Button>
+            </form>
+          </Form>
 
-      <p className="text-muted-foreground mt-6 text-center text-sm">
-        ¿No tienes cuenta?{" "}
-        <a href="/register" className="text-primary underline underline-offset-4">
-          Regístrate
-        </a>
-      </p>
+          <p className="text-muted-foreground mt-6 text-center text-sm">
+            ¿No tienes cuenta?{" "}
+            <a href="/register" className="text-primary underline underline-offset-4">
+              Regístrate
+            </a>
+          </p>
+        </>
+      )}
     </div>
   );
 }

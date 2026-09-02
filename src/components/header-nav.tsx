@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, SettingsIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/notification-bell";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
   { href: "/", label: "Inicio" },
@@ -71,6 +72,17 @@ export function HeaderNav({
           initialNotifications={initialNotifications}
           initialUnreadCount={initialUnreadCount}
         />
+
+        <ThemeToggle />
+
+        <Link
+          href="/settings"
+          title="Configuración"
+          aria-label="Configuración"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <SettingsIcon />
+        </Link>
 
         <Button variant="ghost" size="icon" onClick={() => signOut({ callbackUrl: "/login" })} title={`Cerrar sesión (${userName})`}>
           <LogOutIcon />
