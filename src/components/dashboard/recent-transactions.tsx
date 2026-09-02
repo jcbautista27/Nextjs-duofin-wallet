@@ -46,7 +46,7 @@ export function RecentTransactions({
             className="border-border flex items-center gap-3 rounded-lg border px-4 py-3"
           >
             <div
-              className={`flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium text-white ${
+              className={`flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium text-white dark:text-background ${
                 isOwn ? "bg-partner-jade" : "bg-partner-plum"
               }`}
             >
