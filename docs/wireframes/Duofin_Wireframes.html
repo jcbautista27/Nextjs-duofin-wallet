@@ -391,6 +391,66 @@
       </div>
     </div>
 
+    <!-- REPORTES -->
+    <div class="screen" data-screen="reports">
+      <div class="col p gap-sm">
+        <div class="row" style="justify-content:space-between;align-items:center;">
+          <div class="wf-line" style="width:100px;height:14px;"></div>
+          <div class="row gap-xs"><div class="wf-pill">Este mes</div><div class="wf-pill">Anterior</div></div>
+        </div>
+        <div class="row gap-xs">
+          <div class="wf-box" style="flex:1;height:44px;">Gastado</div>
+          <div class="wf-box" style="flex:1;height:44px;">Ingresos</div>
+          <div class="wf-box" style="flex:1;height:44px;">Balance</div>
+        </div>
+        <div class="row gap-sm" style="align-items:flex-start;">
+          <div class="wf-box" style="width:120px;height:120px;border-radius:50%;">donut</div>
+          <div class="col gap-xs" style="flex:1;">
+            <div class="row gap-xs"><div class="wf-line" style="width:70px;height:8px;"></div><div class="wf-line" style="flex:1;height:8px;"></div></div>
+            <div class="row gap-xs"><div class="wf-line" style="width:70px;height:8px;"></div><div class="wf-line" style="flex:1;height:8px;"></div></div>
+            <div class="row gap-xs"><div class="wf-line" style="width:70px;height:8px;"></div><div class="wf-line" style="flex:1;height:8px;"></div></div>
+          </div>
+        </div>
+        <div class="wf-box" style="height:80px;width:100%;">barras comparativas Tú vs Pareja</div>
+        <div class="col gap-xs">
+          <div class="wf-box" style="height:34px;width:100%;">recomendación 1</div>
+          <div class="wf-box" style="height:34px;width:100%;">recomendación 2</div>
+          <div class="wf-box" style="height:34px;width:100%;">recomendación 3</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVEGACION MOVIL -->
+    <div class="screen" data-screen="mobile-nav">
+      <div class="col" style="height:100%;min-height:600px;justify-content:space-between;">
+        <div class="row p" style="justify-content:space-between;align-items:center;border-bottom:1px solid #e0e0e0;">
+          <div class="wf-line" style="width:60px;height:14px;"></div>
+          <div class="row gap-xs">
+            <div class="wf-circle" style="width:26px;height:26px;">◑</div>
+            <div class="wf-circle" style="width:26px;height:26px;">🔔</div>
+          </div>
+        </div>
+        <div class="wf-box" style="flex:1;margin:16px;">contenido de la pantalla</div>
+        <div class="col">
+          <div class="col gap-xs p" style="border-top:1px solid #e0e0e0; background:#fafafa;">
+            <div class="row gap-sm" style="align-items:center;"><div class="wf-circle" style="width:18px;height:18px;">🏷️</div><div class="wf-line" style="width:90px;height:9px;"></div></div>
+            <div class="row gap-sm" style="align-items:center;"><div class="wf-circle" style="width:18px;height:18px;">👥</div><div class="wf-line" style="width:110px;height:9px;"></div></div>
+            <div class="row gap-sm" style="align-items:center;"><div class="wf-circle" style="width:18px;height:18px;">🔔</div><div class="wf-line" style="width:100px;height:9px;"></div></div>
+            <div class="row gap-sm" style="align-items:center;"><div class="wf-circle" style="width:18px;height:18px;">⚙️</div><div class="wf-line" style="width:95px;height:9px;"></div></div>
+            <div class="row gap-sm" style="align-items:center;"><div class="wf-circle" style="width:18px;height:18px;">🚪</div><div class="wf-line" style="width:80px;height:9px;"></div></div>
+            <div style="font-size:10px;color:#999;text-align:center;margin-top:4px;">↑ Panel "Más" (abierto)</div>
+          </div>
+          <div class="row p" style="justify-content:space-around;align-items:center;border-top:1px solid #ccc;">
+            <div class="col gap-xs" style="align-items:center;"><div class="wf-circle" style="width:22px;height:22px;">🏠</div><div class="wf-line" style="width:30px;height:6px;"></div></div>
+            <div class="col gap-xs" style="align-items:center;"><div class="wf-circle" style="width:22px;height:22px;">📋</div><div class="wf-line" style="width:30px;height:6px;"></div></div>
+            <div class="wf-circle" style="width:32px;height:32px;background:#ccc;margin-top:-14px;">+</div>
+            <div class="col gap-xs" style="align-items:center;"><div class="wf-circle" style="width:22px;height:22px;">📊</div><div class="wf-line" style="width:30px;height:6px;"></div></div>
+            <div class="col gap-xs" style="align-items:center;"><div class="wf-circle" style="width:22px;height:22px;">☰</div><div class="wf-line" style="width:30px;height:6px;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ESPACIO DE PAREJA -->
     <div class="screen" data-screen="space">
       <div class="col p gap-md" style="align-items:center; text-align:center; min-height:600px; justify-content:center;">
@@ -422,7 +482,7 @@
 </div>
 
 <script>
-  const screens = ['login','register','accept-invite','pin-login','pin-setup','dashboard','history','transaction','notifications','categories','space'];
+  const screens = ['login','register','accept-invite','pin-login','pin-setup','dashboard','history','reports','transaction','notifications','categories','mobile-nav','space'];
   const labels = {
     login: 'Login',
     register: 'Registro',
@@ -431,9 +491,11 @@
     'pin-setup': 'Configurar PIN',
     dashboard: 'Dashboard',
     history: 'Historial + filtros',
+    reports: 'Reportes',
     transaction: 'Nueva transacción',
     notifications: 'Notificaciones',
     categories: 'Categorías',
+    'mobile-nav': 'Nav móvil + Más',
     space: 'Espacio de pareja'
   };
   const nav = document.getElementById('nav');
