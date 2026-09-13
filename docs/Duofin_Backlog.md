@@ -1,6 +1,6 @@
 # Backlog de Desarrollo — Duofin
 
-**Versión:** 1.1 (MVP + mejoras post-lanzamiento)
+**Versión:** 1.3 (MVP + mejoras post-lanzamiento)
 **Documentos base:** Duofin_Especificaciones_Funcionales.md, Duofin_Especificaciones_Tecnicas.md
 **Propósito:** Lista secuencial y accionable de tareas para que un agente de código (ej. OpenCode) construya la app paso a paso, respetando dependencias.
 
@@ -152,6 +152,62 @@
 - [ ] **9.10** Agregar toggle manual de tema (claro/oscuro/sistema) en la UI (ej. en configuración o header).
   - *Aceptación:* la elección manual persiste entre sesiones (localStorage) y anula la preferencia del sistema hasta que el usuario la reinicie.
 - [ ] **9.11** Revisar todas las pantallas existentes (Fases 2 a 8) en modo oscuro para verificar contraste y legibilidad, especialmente en los montos (Spline Sans Mono) y el gráfico del "traslape".
+
+---
+
+## Fase 10 — Corrección: fecha de transacción se corre 1 día
+
+*Depende de: Fase 5 (transacciones ya implementadas). Origen: `docs/changes/2026-09-12_bugfix-fechas-y-reportes.md`. Bugfix, no bloquea otras fases.*
+
+- [ ] **10.1** Localizar todos los puntos donde se crea/parsea `Transaction.date` a partir del input de fecha (formulario de nueva transacción y edición) y ajustar para construir el `Date` con mediodía UTC (`T12:00:00Z`), no medianoche.
+- [ ] **10.2** Localizar todos los puntos donde se formatea `Transaction.date` para mostrar (historial, dashboard, reportes) y ajustar para usar métodos UTC (`getUTCDate`, `getUTCMonth`, `getUTCFullYear` o `Intl.DateTimeFormat` con `timeZone: 'UTC'`), nunca métodos locales.
+- [ ] **10.3** Verificar con una transacción de prueba en una zona horaria negativa (ej. simular UTC-5): la fecha mostrada en el historial debe ser idéntica a la seleccionada al crearla.
+  - *Aceptación:* registrar una transacción con fecha X y verla en el historial también con fecha X, sin desfase, probado explícitamente en UTC-5.
+- [ ] **10.4** Revisar que los filtros por fecha del historial (Fase 5) y los rangos de periodo de reportes (Fase 11) usen la misma lógica UTC, para que no haya inconsistencias entre pantallas.
+
+---
+
+## Fase 11 — Dashboard de reportes
+
+*Depende de: Fase 10 (fechas corregidas) y Fase 6 (balance). Origen: `docs/changes/2026-09-12_bugfix-fechas-y-reportes.md`. Diseño validado en mockup HTML aprobado por el usuario.*
+
+- [ ] **11.1** Instalar `chart.js` y `react-chartjs-2`.
+- [ ] **11.2** Crear `lib/categoryColors.ts` con el mapeo de colores por categoría (ver sistema de diseño, sección 2.2).
+- [ ] **11.3** Crear `lib/reportRules.ts` con las constantes de umbrales del motor de recomendaciones (15% aumento, 25% peso relativo, 20% tasa de ahorro — ver especificaciones técnicas, sección 7.2).
+- [ ] **11.4** Endpoint `GET /api/reports`: calcula totales del periodo, agregación por categoría, agregación por usuario+categoría, y ejecuta el motor de reglas para generar `insights`.
+  - *Aceptación:* la forma de la respuesta coincide con el ejemplo de la sección 7.1 de las especificaciones técnicas.
+- [ ] **11.5** UI de la pantalla "Reportes" (wireframe 6.7 del sistema de diseño): selector de periodo, tarjetas de métricas, donut + ranking, comparación Tú vs Pareja, tarjetas de recomendación.
+- [ ] **11.6** Verificar que los montos y porcentajes se muestran redondeados (sin decimales flotantes de JS) y los montos en Spline Sans Mono, consistente con el resto de la app.
+- [ ] **11.7** Verificar la pantalla de Reportes en modo oscuro (paleta de categorías debe seguir siendo legible sobre fondo oscuro).
+
+---
+
+## Fase 12 — Navegación responsive + favicon + tema solo-ícono
+
+*Depende de: Fase 9 (modo oscuro ya implementado). Origen: `docs/changes/2026-09-13_nav-favicon-tema-swr.md`. Mockups validados con el usuario.*
+
+- [ ] **12.1** Crear componente `<Nav />` único que renderice bottom tab bar en mobile (`< md:`) y navegación horizontal en desktop (`md:` en adelante) — ver especificaciones técnicas, sección 9.1.
+- [ ] **12.2** Bottom tab bar mobile: Inicio, Historial, botón central "+" (destacado en `combined-gold`), Reportes, Más.
+  - *Aceptación:* en una pantalla de ≤767px, las 5 opciones son tocables sin desbordarse ni recortarse.
+- [ ] **12.3** Implementar panel "Más" (componente shadcn `Sheet`) con: Categorías, Espacio de pareja, Notificaciones, Configuración, Cerrar sesión.
+- [ ] **12.4** Verificar que las 12 pantallas de la app son accesibles tanto desde el bottom nav + "Más" (mobile) como desde el nav horizontal (desktop), sin funcionalidad faltante en ningún formato.
+- [ ] **12.5** Generar favicon a partir del logo "traslape" y colocarlo en `app/icon.png` (32×32 y 180×180) siguiendo la convención de Next.js App Router.
+  - *Aceptación:* la pestaña del navegador muestra el ícono de Duofin, no el favicon por defecto de Next.js.
+- [ ] **12.6** Refactorizar el botón de tema a un control de solo ícono (32×32px), cicla sol → luna → monitor, con `aria-label` dinámico.
+
+---
+
+## Fase 13 — Actualización en tiempo real de datos (SWR)
+
+*Depende de: Fase 5 (transacciones), Fase 6 (balance), Fase 11 (reportes). Origen: `docs/changes/2026-09-13_nav-favicon-tema-swr.md`. Bugfix estructural.*
+
+- [ ] **13.1** Instalar `swr`.
+- [ ] **13.2** Crear `lib/swrKeys.ts` con las claves centralizadas: `transactions`, `balance`, `reports`, `notifications`.
+- [ ] **13.3** Migrar la obtención de datos del historial de transacciones, balance del dashboard, reportes y notificaciones de `fetch` en `useEffect` a `useSWR`.
+- [ ] **13.4** Al crear/editar/eliminar una transacción, invalidar (`mutate()`) las claves `transactions`, `balance` y `reports` juntas.
+- [ ] **13.5** Implementar actualización optimista al crear una transacción: aparece en la lista de inmediato, se revierte si el `POST` falla.
+  - *Aceptación:* registrar una transacción y verla aparecer en el historial y en el balance del dashboard **sin recargar la página**, en menos de 1 segundo.
+- [ ] **13.6** Verificar el mismo comportamiento (actualización sin recargar) para categorías creadas/editadas y notificaciones nuevas.
 
 ---
 

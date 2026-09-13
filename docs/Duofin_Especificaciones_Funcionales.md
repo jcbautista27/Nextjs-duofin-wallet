@@ -1,6 +1,6 @@
 # Especificaciones Funcionales — Duofin
 
-**Versión:** 1.1
+**Versión:** 1.3
 **Fecha:** Agosto 2026
 **Tipo de producto:** Web App para gestión de finanzas personales en pareja
 
@@ -61,6 +61,8 @@ Cada transacción (ingreso o gasto) registrada manualmente debe incluir:
 - Descripción/nota (opcional)
 - Usuario al que pertenece (automático, según quién la registra)
 
+**Regla de fecha:** la fecha que el usuario selecciona al registrar la transacción debe conservarse exactamente igual en el historial y en todos los reportes, sin importar la zona horaria del dispositivo. Nunca debe mostrarse un día distinto al seleccionado.
+
 ### 3.3 Categorías
 - El sistema incluye un set de **categorías predefinidas** (ej. Vivienda, Alimentación, Transporte, Salud, Entretenimiento, Ingresos - Sueldo, Ingresos - Otros, etc.).
 - Cada usuario puede **crear categorías personalizadas** adicionales.
@@ -105,6 +107,26 @@ Cada transacción (ingreso o gasto) registrada manualmente debe incluir:
 - La app soporta tema claro y oscuro.
 - Por defecto, sigue la preferencia del sistema operativo del usuario.
 - El usuario puede anular esa preferencia manualmente con un toggle, en cualquier momento.
+
+### 4.8 Dashboard de reportes
+Pantalla dedicada a entender los patrones de gasto y tomar acción sobre ellos, con datos del periodo seleccionado (mes actual, mes anterior o rango personalizado):
+
+- **Métricas del periodo:** total gastado, total de ingresos, balance combinado.
+- **Gastos por categoría:** gráfico donut + ranking de categorías con su porcentaje sobre el total.
+- **Comparación por usuario:** gasto de cada miembro de la pareja, desglosado por categoría.
+- **Recomendaciones automáticas:** tarjetas generadas por reglas simples con umbrales fijos (no requieren IA), por ejemplo:
+  - Categoría cuyo gasto subió ≥15% respecto al periodo anterior.
+  - Categoría con mayor peso relativo sobre el gasto total del periodo.
+  - Tasa de ahorro del periodo (ingresos - gastos, como % de los ingresos), destacada si es positiva o si cae por debajo de cierto umbral.
+
+### 4.9 Navegación adaptable
+- En pantallas móviles, la app usa una barra de navegación inferior fija con las acciones más frecuentes (Inicio, Historial, Nueva transacción, Reportes) y un panel "Más" para el resto de opciones (Categorías, Espacio de pareja, Notificaciones, Configuración, Cerrar sesión).
+- En pantallas de escritorio, todas las opciones son visibles directamente en la navegación superior, sin necesidad de un menú "Más".
+- Todas las funcionalidades del MVP deben ser accesibles en ambos formatos, sin excepción.
+
+### 4.10 Actualización en tiempo real de datos
+- Al registrar, editar o eliminar una transacción, los cambios deben reflejarse **de inmediato** en el historial, el balance del dashboard y el dashboard de reportes, sin que el usuario necesite recargar la página manualmente.
+- Esta misma expectativa aplica a cualquier acción que modifique datos visibles en más de una pantalla (ej. categorías, notificaciones).
 
 ---
 
@@ -160,5 +182,7 @@ Cada transacción (ingreso o gasto) registrada manualmente debe incluir:
 ---
 
 ## Changelog
+- **v1.3** (2026-09-13): agregada navegación adaptable (sección 4.9) y actualización en tiempo real de datos (sección 4.10). Ver `docs/changes/2026-09-13_nav-favicon-tema-swr.md`.
+- **v1.2** (2026-09-12): agregada regla de fecha de transacción (sección 3.2, bugfix) y dashboard de reportes (sección 4.8). Ver `docs/changes/2026-09-12_bugfix-fechas-y-reportes.md`.
 - **v1.1** (2026-08-30): agregado login rápido con PIN (sección 4.6) y modo oscuro (sección 4.7). Ver `docs/changes/2026-08-30_pin-login-y-modo-oscuro.md`.
 - **v1.0** (2026-08-2026): versión inicial del MVP.

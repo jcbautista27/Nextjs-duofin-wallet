@@ -1,6 +1,6 @@
 # Sistema de Diseño — Duofin
 
-**Versión:** 1.1 (MVP)
+**Versión:** 1.3 (MVP)
 **Propósito:** Guía visual para que el agente de código implemente la UI de forma consistente (Tailwind + shadcn/ui).
 
 ---
@@ -57,6 +57,22 @@ Mismo sistema de tokens, ajustado en luminosidad para fondo oscuro. Los tonos de
 | `--muted-foreground` | `#9AA097` | Texto secundario. |
 
 **Regla de implementación:** usar `next-themes` con estrategia `class` (agrega `class="dark"` al `<html>`) y definir ambos bloques de variables CSS (`:root` para claro, `.dark` para oscuro) — ver sección 4. Por defecto, `next-themes` respeta `prefers-color-scheme` del sistema; el toggle manual sobreescribe y persiste la elección en `localStorage`.
+
+### 2.2 Paleta de categorías (para gráficos de reportes)
+
+Cada categoría predefinida tiene un color fijo, usado en el donut y el ranking del dashboard de reportes. Las categorías personalizadas que cree el usuario toman colores de la fila "Extendida", en orden, sin repetir tono con las ya asignadas.
+
+| Categoría | Hex | Uso |
+|---|---|---|
+| Alimentación | `#1F6F5C` (jade) | Reutiliza el jade de identidad. |
+| Vivienda | `#C9A227` (gold) | Reutiliza el gold combinado. |
+| Transporte | `#7A3F5E` (plum) | Reutiliza el plum de identidad. |
+| Entretenimiento | `#9C5B45` | Marrón cálido — nueva, distinta de la familia terracota genérica. |
+| Salud | `#3B6E8F` | Azul acero — nueva. |
+| Otros | `#8A8D86` | Gris neutro. |
+| *Extendida (personalizadas)* | `#5B7A3F`, `#8F5B8A`, `#3F5B7A`, ... | Se agregan en este orden a medida que se crean categorías nuevas. |
+
+**Nota para el agente:** definir este mapeo en un solo archivo (ej. `lib/categoryColors.ts`) para que sea consistente entre el donut, el ranking y el listado de transacciones.
 
 ---
 
@@ -258,8 +274,62 @@ colors: {
 └─────────────────────────────────┘
 ```
 
+### 6.7 Reportes
+```
+┌──────────────────────────────────────────────┐
+│ Reportes      [Este mes][Mes ant.][Personal.] │
+├──────────────────────────────────────────────┤
+│ [Gastado: S/2,180] [Ingresos: S/5,000]        │
+│                        [Balance: S/2,820]     │
+├──────────────────────────────────────────────┤
+│ Gastos por categoría   │  Top categorías      │
+│    (donut)             │  ▓▓▓▓▓▓░░ Alim. 36%  │
+│                        │  ▓▓▓▓▓░░░ Vivi. 30%  │
+│                        │  ▓▓░░░░░░ Transp 14% │
+├──────────────────────────────────────────────┤
+│ Tú vs pareja, por categoría                   │
+│    (barras agrupadas)                         │
+├──────────────────────────────────────────────┤
+│ Recomendaciones                               │
+│ ▎Alimentación subió +18% vs mes pasado         │
+│ ▎Entretenimiento es el 14% de tu gasto total  │
+│ ▎Ahorraste el 56% de tus ingresos este mes    │
+└──────────────────────────────────────────────┘
+```
+
 ---
 
-## 7. Changelog
+### 6.8 Navegación móvil (bottom nav + menú "Más")
+```
+┌──────────────────────────────────┐
+│ Duofin              [◑][🔔]      │  ← [◑] = botón de tema, solo ícono
+├──────────────────────────────────┤
+│                                    │
+│      (contenido de la pantalla)   │
+│                                    │
+├──────────────────────────────────┤
+│  🏠      📋      ⊕      📊    ☰  │
+│ Inicio Historial(+) Reportes Más │
+└──────────────────────────────────┘
+
+Al tocar "Más":
+┌──────────────────────────────────┐
+│  🏷️ Categorías                     │
+│  👥 Espacio de pareja              │
+│  🔔 Notificaciones                 │
+│  ⚙️ Configuración                  │
+│  🚪 Cerrar sesión                  │
+└──────────────────────────────────┘
+```
+
+**Especificación del botón de tema [◑]:** 32×32px, sin texto, ícono cicla sol → luna → monitor (claro → oscuro → sistema). `aria-label` dinámico según estado.
+
+**Favicon:** el logo "traslape" (círculos jade + ciruela superpuestos, sin el texto "Duofin"), exportado en 32×32 y 180×180px. Ver especificaciones técnicas, sección 9.2, para la implementación con Next.js.
+
+---
+
+## 9. Changelog
+- **v1.3** (2026-09-13): agregada navegación móvil con bottom nav + menú "Más" (sección 6.8), especificación de favicon y botón de tema solo-ícono. Ver `docs/changes/2026-09-13_nav-favicon-tema-swr.md`.
+- **v1.2** (2026-09-12): agregada paleta de categorías para reportes (sección 2.2), wireframe de Reportes (6.7). Ver `docs/changes/2026-09-12_bugfix-fechas-y-reportes.md`.
 - **v1.1** (2026-08-30): agregada paleta de modo oscuro (sección 2.1), setup de next-themes, wireframes de PIN (6.5, 6.6). Ver `docs/changes/2026-08-30_pin-login-y-modo-oscuro.md`.
 - **v1.0** (2026-08-2026): versión inicial del MVP.
